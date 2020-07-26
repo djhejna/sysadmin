@@ -1,3 +1,15 @@
+# Test for essential variables
+[[ -z "$FREENAS_IP" ]] && { echo "Error: FREENAS_IP not set"; exit 1; } || echo "FREENAS_IP: ${FREENAS_IP}"
+[[ -z "$FREENAS_BUDIR" ]] && { echo "Error: FREENAS_BUDIR not set"; exit 1; } || echo "FREENAS_BUDIR: ${FREENAS_BUDIR}"
+
+
+# Update list of manually installed packages
+# From: https://askubuntu.com/questions/2389/generating-list-of-manually-installed-packages-and-querying-individual-packages
+PACKAGELOGFILE=~/pkgs_manually_installed_asof_$(date +%Y%m%d)
+comm -23 <(apt-mark showmanual | sort -u) <(gzip -dc /var/log/installer/initial-status.gz | sed -n 's/^Package: //p' | sort -u) > $PACKAGELOGFILE
+echo -n "Backing up manually installed package list: "
+wc -l $PACKAGELOGFILE
+
 # backup from unix / linux to FreeNAS
 # sudo apt-install nfs-common   # If NFS not installed for client machine
 BACKUPMACH=$FREENAS_IP
@@ -41,4 +53,5 @@ echo "Test running rsync with grep error:"  |& tee -a $BACKUPLOGFILE
 rsync -naP --exclude-from=/tmp/rsync-homedir-local.txt /home/$USER/ root@$BACKUPMACH:$BACKUPDIR|grep 'error:' |& tee -a $BACKUPLOGFILE
 
 # if it is all fine, actually perform your backup:
-# rsync -aP --exclude-from=/tmp/rsync-homedir-local.txt /home/$USER/ root@$BACKUPMACH:$BACKUPDIR
+rsync -aP --exclude-from=/tmp/rsync-homedir-local.txt /home/$USER/ root@$BACKUPMACH:$BACKUPDIR |& tee -a $BACKUPLOGFILE
+

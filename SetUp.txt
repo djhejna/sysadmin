@@ -1,0 +1,11 @@
+
+
+1. du to determine size of backups and what to prune:
+  cd ~; du -s * | sort -rh | more
+
+2. Set up the following shell variables:
+
+   FREENAS_IP: address of backup machine
+   FREENAS_BUDIR: back directory on FREENAS machine (Needs trailing '/')
+
+
