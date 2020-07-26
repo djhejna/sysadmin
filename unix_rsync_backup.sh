@@ -43,15 +43,19 @@ BACKUPLOGFILE=/tmp/rsync_backup_$(date +%Y%m%d)
 
 # first specify the "-n" parameter so rsync will simulate its operation. You should use this before you start:
 echo "Test running rsync"  |& tee -a $BACKUPLOGFILE
-rsync -naP --exclude-from=/tmp/rsync-homedir-local.txt /home/$USER/ root@$BACKUPMACH:$BACKUPDIR |& tee -a $BACKUPLOGFILE
+#rsync -naP --exclude-from=/tmp/rsync-homedir-local.txt /home/$USER/ root@$BACKUPMACH:$BACKUPDIR |& tee -a $BACKUPLOGFILE
+rsync -naP --exclude-from=/tmp/rsync-homedir-local.txt /home/$USER/ $BACKUPDIR |& tee -a $BACKUPLOGFILE
 
 # check for permission denied errors in your homedir:
 echo "Test running rsync with grep denied"  |& tee -a $BACKUPLOGFILE
-rsync -naP --exclude-from=/tmp/rsync-homedir-local.txt /home/$USER/ root@$BACKUPMACH:$BACKUPDIR|grep denied |& tee -a $BACKUPLOGFILE
+#rsync -naP --exclude-from=/tmp/rsync-homedir-local.txt /home/$USER/ root@$BACKUPMACH:$BACKUPDIR|grep denied |& tee -a $BACKUPLOGFILE
+rsync -naP --exclude-from=/tmp/rsync-homedir-local.txt /home/$USER/ $BACKUPDIR|grep denied |& tee -a $BACKUPLOGFILE
 
 echo "Test running rsync with grep error:"  |& tee -a $BACKUPLOGFILE
-rsync -naP --exclude-from=/tmp/rsync-homedir-local.txt /home/$USER/ root@$BACKUPMACH:$BACKUPDIR|grep 'error:' |& tee -a $BACKUPLOGFILE
+#rsync -naP --exclude-from=/tmp/rsync-homedir-local.txt /home/$USER/ root@$BACKUPMACH:$BACKUPDIR|grep 'error:' |& tee -a $BACKUPLOGFILE
+rsync -naP --exclude-from=/tmp/rsync-homedir-local.txt /home/$USER/ $BACKUPDIR|grep 'error:' |& tee -a $BACKUPLOGFILE
 
 # if it is all fine, actually perform your backup:
-rsync -aP --exclude-from=/tmp/rsync-homedir-local.txt /home/$USER/ root@$BACKUPMACH:$BACKUPDIR |& tee -a $BACKUPLOGFILE
-
+echo "Test running ACTUAL Backup:"  |& tee -a $BACKUPLOGFILE
+# rsync -aP --exclude-from=/tmp/rsync-homedir-local.txt /home/$USER/ root@$BACKUPMACH:$BACKUPDIR
+rsync -aP --exclude-from=/tmp/rsync-homedir-local.txt /home/$USER/ $BACKUPDIR |& tee -a $BACKUPLOGFILE
