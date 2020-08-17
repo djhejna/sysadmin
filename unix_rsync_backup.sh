@@ -41,6 +41,8 @@ BACKUPDIR=$FREENAS_BUDIR
 
 BACKUPLOGFILE=/tmp/rsync_backup_$(date +%Y%m%d)
 
+# /usr/bin/rsync -avzh --dry-run --exclude-from ~/.rsync_excludes /home/$USER root@192.168.21.XXX:/mnt/Backup
+
 # first specify the "-n" parameter so rsync will simulate its operation. You should use this before you start:
 echo "Test running rsync"  |& tee -a $BACKUPLOGFILE
 #rsync -naP --exclude-from=/tmp/rsync-homedir-local.txt /home/$USER/ root@$BACKUPMACH:$BACKUPDIR |& tee -a $BACKUPLOGFILE
